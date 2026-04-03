@@ -15,9 +15,9 @@ public class Dispatcher {
         this.defaultNotFoundRequestProcessor = new DefaultNotFoundRequestProcessor();
         this.processors = new HashMap<>();
         this.processors.put("GET /calculator", new CalculatorRequestProcessor());
-        this.processors.put("GET /hello", new HelloRequestProcessor());
+        this.processors.put("GET /", new HelloRequestProcessor());
         this.processors.put("GET /items", new GetItemsRequestProcessor());
-        this.processors.put("POST /items", new CreateItemRequestProcessor());
+        this.processors.put("POST /create/items", new CreateItemRequestProcessor());
     }
 
     public void execute(HttpRequest request, OutputStream output) throws IOException {
