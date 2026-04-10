@@ -10,14 +10,21 @@ import java.util.Map;
 public class Dispatcher {
     private Map<String, RequestProcessor> processors;
     private RequestProcessor defaultNotFoundRequestProcessor;
+    private ItemRepository itemRepository;
 
     public Dispatcher() {
         this.defaultNotFoundRequestProcessor = new DefaultNotFoundRequestProcessor();
+        this.itemRepository = new ItemRepository();
         this.processors = new HashMap<>();
         this.processors.put("GET /calculator", new CalculatorRequestProcessor());
         this.processors.put("GET /", new HelloRequestProcessor());
         this.processors.put("GET /items", new GetItemsRequestProcessor());
+        this.processors.put("GET /create", new CreatePageRequestProcessor());
         this.processors.put("POST /create/items", new CreateItemRequestProcessor());
+
+        this.processors.put("GET /api/items", new GetItemsApiRequestProcessor(itemRepository));
+        this.processors.put("POST /api/items", new CreateItemApiRequestProcessor(itemRepository));
+        this.processors.put("DELETE /api/items", new DeleteItemApiRequestProcessor(itemRepository));
     }
 
     public void execute(HttpRequest request, OutputStream output) throws IOException {
