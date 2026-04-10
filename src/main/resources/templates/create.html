@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Item</title>
+<style>
+body {margin:0;padding:0;font-family:sans-serif;height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#020617,#1e293b);color:white;}
+.container {perspective:1200px;}
+.card {width:360px;padding:30px;border-radius:20px;background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);box-shadow:0 20px 40px rgba(0,0,0,0.5);text-align:center;transform-style:preserve-3d;transition:transform 0.2s ease;position:relative;}
+.glow {position:absolute;width:200px;height:200px;background:radial-gradient(circle, rgba(99,102,241,0.5), transparent 70%);top:-50px;right:-50px;filter:blur(40px);}
+input {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 8px 0;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(30,41,59,0.6);
+    color: white;
+    outline: none;
+}
+a.button, button.button {display:block;width:100%;margin-top:10px;padding:10px;border-radius:10px;background:linear-gradient(135deg,#38bdf8,#6366f1);color:white;text-decoration:none;font-weight:bold;transition:transform 0.2s,box-shadow 0.2s;border:none;cursor:pointer;}
+a.button:hover, button.button:hover {transform:translateY(-3px);box-shadow:0 15px 25px rgba(0,0,0,0.4);}
+.status {margin-top:12px; opacity:0.85; font-size: 14px;}
+</style>
+</head>
+<body ng-controller="createController">
+<div class="container">
+<div class="card" id="card">
+<div class="glow"></div>
+<h1>Create Item</h1>
+<input type="text" placeholder="Name" ng-model="newItem.name">
+<input type="number" placeholder="Price" ng-model="newItem.price">
+<button class="button" ng-click="submitCreateNewProduct()">Create</button>
+<div class="status">{{status}}</div>
+<a class="button" href="/">Back Home</a>
+</div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script>
+angular.module('app', []).controller('createController', function ($scope, $http) {
+    $scope.newItem = {name: "", price: 0};
+    $scope.status = "";
+
+    $scope.submitCreateNewProduct = function () {
+        $scope.status = "Sending...";
+        $http.post("/api/items", $scope.newItem)
+            .then(function (response) {
+                $scope.status = "Created item id=" + response.data.id;
+                $scope.newItem = {name: "", price: 0};
+            }, function (err) {
+                $scope.status = "Error: " + err.status;
+            });
+    };
+});
+</script>
+<script>
+const card=document.getElementById('card');
+document.addEventListener('mousemove', e=>{const x=(window.innerWidth/2-e.pageX)/25;const y=(window.innerHeight/2-e.pageY)/25;card.style.transform=`rotateY(${x}deg) rotateX(${y}deg)`});
+document.addEventListener('mouseleave', ()=> card.style.transform='rotateY(0deg) rotateX(0deg)');
+</script>
+</body>
+</html>
