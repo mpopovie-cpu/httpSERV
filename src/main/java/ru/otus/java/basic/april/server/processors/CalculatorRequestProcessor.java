@@ -1,10 +1,11 @@
 package ru.otus.java.basic.april.server.processors;
 
 import ru.otus.java.basic.april.server.HttpRequest;
+import ru.otus.java.basic.april.server.HttpResponse;
+import ru.otus.java.basic.april.server.TemplateLoader;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 
 public class CalculatorRequestProcessor implements RequestProcessor {
     @Override
@@ -12,11 +13,8 @@ public class CalculatorRequestProcessor implements RequestProcessor {
         int a = Integer.parseInt(request.getParameter("a"));
         int b = Integer.parseInt(request.getParameter("b"));
         String result = a + " + " + b + " = " + (a + b);
-        String response = "" +
-                "HTTP/1.1 200 OK\r\n" +
-                "Content-Type: text/html\r\n" +
-                "\r\n" +
-                "<html><body><h1>" + result + "</h1></body></html>";
-        output.write(response.getBytes(StandardCharsets.UTF_8));
+
+        String body = TemplateLoader.load("templates/calculator.html").replace("{{result}}", result);
+        HttpResponse.ok(body).send(output);
     }
 }
