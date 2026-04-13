@@ -1,5 +1,5 @@
 package ru.otus.java.basic.april.server.processors;
-
+//delete items by id
 import ru.otus.java.basic.april.server.HttpRequest;
 import ru.otus.java.basic.april.server.HttpResponse;
 import ru.otus.java.basic.april.server.ItemRepository;
