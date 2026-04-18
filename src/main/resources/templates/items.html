@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Items Console</title>
+    <style>
+        :root {
+            --bg: #07111d;
+            --panel: rgba(255, 255, 255, 0.07);
+            --panel-border: rgba(255, 255, 255, 0.1);
+            --text: #f5f7fb;
+            --muted: rgba(230, 238, 247, 0.7);
+            --accent: #75d5ff;
+            --accent-2: #a18bff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 15% 15%, rgba(117, 213, 255, 0.07), transparent 24%),
+                radial-gradient(circle at 85% 20%, rgba(161, 139, 255, 0.07), transparent 24%),
+                linear-gradient(150deg, #05060c 0%, #07090f 42%, #06080f 100%);
+            min-height: 100vh;
+        }
+
+        .shell {
+            width: min(1220px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 22px 0 42px;
+        }
+
+        .header {
+            position: sticky;
+            top: 18px;
+            z-index: 15;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 30px;
+            padding: 16px 20px;
+            border-radius: 999px;
+            border: 1px solid var(--panel-border);
+            background: rgba(8, 10, 18, 0.85);
+            backdrop-filter: blur(18px);
+        }
+
+        .header strong {
+            color: #e8f2ff;
+            font-size: 1.05rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            color: #c8daf0;
+            text-decoration: none;
+            font-weight: 700;
+            padding: 10px 16px;
+            border-radius: 999px;
+        }
+
+        .nav a:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 22px;
+            margin-bottom: 22px;
+        }
+
+        .hero-card,
+        .panel,
+        .console {
+            border-radius: 30px;
+            border: 1px solid var(--panel-border);
+            background: var(--panel);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 28px 70px rgba(0, 0, 0, 0.35);
+        }
+
+        .hero-card {
+            padding: 30px;
+        }
+
+        .hero-card small {
+            color: #b7dfff;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .hero-card h1 {
+            margin: 16px 0 12px;
+            font-size: clamp(2.4rem, 5vw, 4.2rem);
+            line-height: 0.94;
+            letter-spacing: -0.05em;
+        }
+
+        .hero-card p {
+            margin: 0;
+            max-width: 600px;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 26px;
+        }
+
+        .chip {
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e8f4ff;
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        .hero-side {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .hero-side h2 {
+            margin: 0;
+            font-size: 1.6rem;
+        }
+
+        .hero-side p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .quick-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .quick-links a,
+        button,
+        .link-button {
+            border: none;
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .quick-links a,
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 12px 18px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .primary {
+            color: #04101f;
+            background: linear-gradient(135deg, #f7fbff, #9de6ff);
+        }
+
+        .secondary {
+            color: #eef7ff;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .panels {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .panel {
+            padding: 22px;
+        }
+
+        .panel h2 {
+            margin: 0 0 8px;
+            font-size: 1.35rem;
+        }
+
+        .panel p {
+            margin: 0 0 18px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .input,
+        .status-box,
+        pre {
+            width: 100%;
+            border-radius: 22px;
+        }
+
+        .input {
+            margin-bottom: 12px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(11, 22, 38, 0.65);
+            color: var(--text);
+            outline: none;
+        }
+
+        .status-box {
+            min-height: 128px;
+            padding: 16px;
+            background: rgba(7, 15, 29, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #d8f2ff;
+            white-space: pre-wrap;
+            line-height: 1.65;
+        }
+
+        .console {
+            padding: 24px;
+        }
+
+        .console-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .console-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .console-header span {
+            color: var(--muted);
+        }
+
+        pre {
+            margin: 0;
+            padding: 24px;
+            background: rgba(7, 15, 29, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #d5edff;
+            min-height: 260px;
+            overflow: auto;
+        }
+
+        @media (max-width: 1040px) {
+            .hero,
+            .panels {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .shell {
+                width: min(100% - 18px, 1220px);
+                padding-top: 12px;
+            }
+
+            .header {
+                top: 10px;
+                border-radius: 28px;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .console-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body ng-controller="indexController">
+<div class="shell">
+    <header class="header">
+        <strong>Items Console</strong>
+        <nav class="nav">
+            <a href="/">Home</a>
+            <a href="/create">Create</a>
+            <a href="/calculator">Calculator</a>
+            <a href="#lookup">Search By Id</a>
+            <a href="#delete">Delete</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-card">
+            <small>Control Surface</small>
+            <h1>Inspect every item or lock on to one exact id.</h1>
+            <p>
+                This screen now gives you a dedicated lookup flow for your new backend endpoint,
+                while keeping refresh and delete actions nearby in the same visual system.
+            </p>
+            <div class="hero-meta">
+                <div class="chip">Live GET /api/items</div>
+                <div class="chip">Single Item Lookup</div>
+                <div class="chip">Delete By Id</div>
+            </div>
+        </div>
+        <aside class="hero-side">
+            <h2>Quick access</h2>
+            <p>Jump straight into the new features without scrolling the raw JSON first.</p>
+            <div class="quick-links">
+                <button class="primary" ng-click="fillTable()">Refresh All</button>
+                <a class="secondary" href="#lookup">Find item by id</a>
+                <a class="secondary" href="/create">Create item</a>
+            </div>
+        </aside>
+    </section>
+
+    <section class="panels">
+        <article class="panel" id="lookup">
+            <h2>Search By Id</h2>
+            <p>Fetch one exact item using the new `GET /api/items?id=...` endpoint.</p>
+            <input class="input" type="number" placeholder="Enter item id" ng-model="lookupId">
+            <button class="primary" ng-click="findItemById(lookupId)">Find Item</button>
+            <div class="status-box">{{lookupResult}}</div>
+        </article>
+
+        <article class="panel">
+            <h2>Refresh All Items</h2>
+            <p>Load the full array at any time and inspect the current in-memory repository state.</p>
+            <button class="primary" ng-click="fillTable()">Refresh JSON</button>
+            <div class="status-box">{{refreshStatus}}</div>
+        </article>
+
+        <article class="panel" id="delete">
+            <h2>Delete By Id</h2>
+            <p>Remove an item and refresh the list immediately after the server confirms deletion.</p>
+            <input class="input" type="number" placeholder="Delete item id" ng-model="productIdToDelete">
+            <button class="primary" ng-click="deleteProductById(productIdToDelete)">Delete Item</button>
+            <div class="status-box">{{deleteStatus}}</div>
+        </article>
+    </section>
+
+    <section class="console">
+        <div class="console-header">
+            <div>
+                <h2>Raw Items JSON</h2>
+                <span>Live output from `GET /api/items`</span>
+            </div>
+            <button class="secondary" ng-click="fillTable()">Reload Data</button>
+        </div>
+        <pre>{{itemsJson}}</pre>
+    </section>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script>
+    angular.module('app', []).controller('indexController', function ($scope, $http) {
+        $scope.itemsJson = "Loading...";
+        $scope.lookupResult = "Enter an item id to see the single-item response here.";
+        $scope.refreshStatus = "Ready to load all items.";
+        $scope.deleteStatus = "Nothing deleted yet.";
+
+        $scope.fillTable = function () {
+            $scope.refreshStatus = "Loading all items...";
+            $scope.itemsJson = "Loading...";
+            $http.get("/api/items").then(function (response) {
+                $scope.itemsJson = JSON.stringify(response.data, null, 2);
+                $scope.refreshStatus = "Loaded " + response.data.length + " items.";
+            }, function (err) {
+                $scope.itemsJson = "Error: " + err.status;
+                $scope.refreshStatus = "Request failed with status " + err.status + ".";
+            });
+        };
+
+        $scope.findItemById = function (itemId) {
+            if (!itemId && itemId !== 0) {
+                $scope.lookupResult = "Enter an item id first.";
+                return;
+            }
+            $scope.lookupResult = "Searching for item id=" + itemId + "...";
+            $http.get("/api/items", {params: {id: itemId}}).then(function (response) {
+                $scope.lookupResult = JSON.stringify(response.data, null, 2);
+            }, function (err) {
+                if (err.data) {
+                    $scope.lookupResult = JSON.stringify(err.data, null, 2);
+                } else {
+                    $scope.lookupResult = "Error: " + err.status;
+                }
+            });
+        };
+
+        $scope.deleteProductById = function (productId) {
+            if (!productId && productId !== 0) {
+                $scope.deleteStatus = "Enter an item id first.";
+                return;
+            }
+            $scope.deleteStatus = "Deleting item id=" + productId + "...";
+            $http({
+                method: "DELETE",
+                url: "/api/items",
+                params: {id: productId}
+            }).then(function (response) {
+                $scope.productIdToDelete = "";
+                $scope.deleteStatus = JSON.stringify(response.data, null, 2);
+                $scope.fillTable();
+            }, function (err) {
+                if (err.data) {
+                    $scope.deleteStatus = JSON.stringify(err.data, null, 2);
+                } else {
+                    $scope.deleteStatus = "Error: " + err.status;
+                }
+            });
+        };
+
+        $scope.fillTable();
+    });
+</script>
+</body>
+</html>

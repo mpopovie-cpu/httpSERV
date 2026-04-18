@@ -14,6 +14,14 @@ public class HttpRequest {
         return body;
     }
 
+    public HttpMethod getMethod() {
+        return method;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
     public String getRoutingKey() {
         return method + " " + uri;
     }

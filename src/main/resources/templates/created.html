@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Created</title>
+    <style>
+        body {margin:0;padding:0;font-family:"Trebuchet MS","Segoe UI",sans-serif;height:100vh;display:flex;justify-content:center;align-items:center;background:radial-gradient(circle at 20% 20%, rgba(117,213,255,0.07), transparent 28%),radial-gradient(circle at 80% 10%, rgba(139,124,255,0.07), transparent 24%),linear-gradient(140deg,#05060c 0%,#07090f 45%,#06080f 100%);color:white;}
+        .container {perspective:1200px;}
+        .card {width:360px;padding:36px;border-radius:24px;background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.09);box-shadow:0 20px 60px rgba(0,0,0,0.6);text-align:center;transform-style:preserve-3d;transition:transform 0.2s ease;position:relative;}
+        a.button {display:block;margin:10px 0;padding:13px;border-radius:999px;background:linear-gradient(135deg,#f7fbff,#9de6ff);color:#04101f;text-decoration:none;font-weight:700;transition:transform 0.15s,box-shadow 0.15s;}
+        a.button:hover {transform:translateY(-3px);box-shadow:0 12px 28px rgba(117,213,255,0.3);}
+        a.button.ghost {background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:#e8f4ff;}
+        .icon {width:64px;height:64px;border-radius:50%;background:rgba(61,219,176,0.1);border:1px solid rgba(61,219,176,0.28);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:1.8rem;}
+        .title {font-size:1.5rem;font-weight:700;margin-bottom:10px;}
+        .subtitle {opacity:0.65;margin-bottom:28px;font-size:0.92rem;line-height:1.6;}
+        .glow {position:absolute;width:200px;height:200px;background:radial-gradient(circle,rgba(61,219,176,0.2),transparent 70%);top:-50px;right:-50px;filter:blur(40px);pointer-events:none;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card" id="card">
+        <div class="glow"></div>
+        <div class="icon">✓</div>
+        <div class="title">Item Created</div>
+        <div class="subtitle">Your item was successfully sent to the server.</div>
+        <a class="button" href="/items">Open Console</a>
+        <a class="button ghost" href="/create">Create Another</a>
+        <a class="button ghost" href="/">Back Home</a>
+    </div>
+</div>
+<script>
+    const card=document.getElementById('card');
+    document.addEventListener('mousemove',e=>{const x=(window.innerWidth/2-e.pageX)/25;const y=(window.innerHeight/2-e.pageY)/25;card.style.transform=`rotateY(${x}deg) rotateX(${y}deg)`});
+    document.addEventListener('mouseleave',()=>card.style.transform='rotateY(0deg) rotateX(0deg)');
+</script>
+</body>
+</html>
