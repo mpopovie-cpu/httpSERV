@@ -6,54 +6,70 @@
     <title>Items Console</title>
     <style>
         :root {
-            --bg: #07111d;
-            --panel: rgba(255, 255, 255, 0.07);
-            --panel-border: rgba(255, 255, 255, 0.1);
-            --text: #f5f7fb;
-            --muted: rgba(230, 238, 247, 0.7);
-            --accent: #75d5ff;
-            --accent-2: #a18bff;
+            --bg: #070707;
+            --panel: rgba(255, 255, 255, 0.055);
+            --panel-strong: rgba(255, 255, 255, 0.08);
+            --panel-border: rgba(255, 255, 255, 0.09);
+            --text: #f6f4ef;
+            --muted: rgba(236, 232, 224, 0.68);
+            --accent: #e3dbcf;
+            --success: #d7ffe5;
+            --danger: #ffd2cf;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
-            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
             color: var(--text);
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
             background:
-                radial-gradient(circle at 15% 15%, rgba(117, 213, 255, 0.07), transparent 24%),
-                radial-gradient(circle at 85% 20%, rgba(161, 139, 255, 0.07), transparent 24%),
-                linear-gradient(150deg, #05060c 0%, #07090f 42%, #06080f 100%);
+                radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.045), transparent 24%),
+                radial-gradient(circle at 84% 18%, rgba(255, 255, 255, 0.028), transparent 22%),
+                linear-gradient(180deg, #050505 0%, #090909 52%, #0d0d0e 100%);
             min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.24;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.07) 0 1px, transparent 2px),
+                radial-gradient(circle at 74% 22%, rgba(255, 255, 255, 0.05) 0 1px, transparent 2px),
+                radial-gradient(circle at 58% 74%, rgba(255, 255, 255, 0.04) 0 1px, transparent 2px);
+            background-size: 200px 200px, 260px 260px, 320px 320px;
+            mix-blend-mode: screen;
         }
 
         .shell {
             width: min(1220px, calc(100% - 32px));
             margin: 0 auto;
-            padding: 22px 0 42px;
+            padding: 22px 0 46px;
+            position: relative;
+            z-index: 1;
         }
 
         .header {
             position: sticky;
             top: 18px;
-            z-index: 15;
+            z-index: 20;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 16px;
-            margin-bottom: 30px;
+            margin-bottom: 28px;
             padding: 16px 20px;
             border-radius: 999px;
             border: 1px solid var(--panel-border);
-            background: rgba(8, 10, 18, 0.85);
+            background: rgba(7, 7, 8, 0.78);
             backdrop-filter: blur(18px);
         }
 
         .header strong {
-            color: #e8f2ff;
+            color: #f8f3eb;
             font-size: 1.05rem;
             letter-spacing: 0.14em;
             text-transform: uppercase;
@@ -66,55 +82,61 @@
         }
 
         .nav a {
-            color: #c8daf0;
+            color: #d9d2c7;
             text-decoration: none;
             font-weight: 700;
             padding: 10px 16px;
             border-radius: 999px;
         }
 
-        .nav a:hover {
-            background: rgba(255, 255, 255, 0.08);
-        }
+        .nav a:hover { background: rgba(255, 255, 255, 0.08); }
 
-        .hero {
-            display: grid;
-            grid-template-columns: 1.15fr 0.85fr;
-            gap: 22px;
-            margin-bottom: 22px;
-        }
-
+        .notice,
         .hero-card,
         .panel,
         .console {
             border-radius: 30px;
             border: 1px solid var(--panel-border);
-            background: var(--panel);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.038));
             backdrop-filter: blur(14px);
             box-shadow: 0 28px 70px rgba(0, 0, 0, 0.35);
         }
 
-        .hero-card {
-            padding: 30px;
+        .notice {
+            display: none;
+            margin-bottom: 18px;
+            padding: 18px 20px;
         }
 
+        .notice.visible { display: block; }
+        .notice.success { color: var(--success); }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.12fr 0.88fr;
+            gap: 22px;
+            margin-bottom: 22px;
+        }
+
+        .hero-card { padding: 30px; }
+
         .hero-card small {
-            color: #b7dfff;
+            color: #dfd6c8;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            font-weight: 700;
+            font-weight: 800;
         }
 
         .hero-card h1 {
             margin: 16px 0 12px;
-            font-size: clamp(2.4rem, 5vw, 4.2rem);
-            line-height: 0.94;
+            font-size: clamp(2.6rem, 5vw, 4.4rem);
+            line-height: 0.92;
             letter-spacing: -0.05em;
         }
 
-        .hero-card p {
+        .hero-card p,
+        .panel p {
             margin: 0;
-            max-width: 600px;
             color: var(--muted);
             line-height: 1.8;
         }
@@ -123,17 +145,17 @@
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
-            margin-top: 26px;
+            margin-top: 24px;
         }
 
         .chip {
             padding: 10px 14px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #e8f4ff;
+            color: #f0e8dc;
             font-size: 0.92rem;
-            font-weight: 700;
+            font-weight: 800;
         }
 
         .hero-side {
@@ -144,16 +166,8 @@
             gap: 16px;
         }
 
-        .hero-side h2 {
-            margin: 0;
-            font-size: 1.6rem;
-        }
-
-        .hero-side p {
-            margin: 0;
-            color: var(--muted);
-            line-height: 1.7;
-        }
+        .hero-side h2 { margin: 0; font-size: 1.6rem; }
+        .hero-side p { margin: 0; color: var(--muted); line-height: 1.7; }
 
         .quick-links {
             display: flex;
@@ -161,34 +175,29 @@
             gap: 12px;
         }
 
-        .quick-links a,
         button,
-        .link-button {
-            border: none;
-            cursor: pointer;
-            font: inherit;
-        }
-
-        .quick-links a,
-        button {
+        .quick-links a {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             min-height: 46px;
             padding: 12px 18px;
             border-radius: 999px;
+            border: none;
+            cursor: pointer;
             text-decoration: none;
-            font-weight: 700;
+            font: inherit;
+            font-weight: 800;
         }
 
         .primary {
-            color: #04101f;
-            background: linear-gradient(135deg, #f7fbff, #9de6ff);
+            color: #090909;
+            background: linear-gradient(135deg, #f7f3ea, #d6cec0);
         }
 
         .secondary {
-            color: #eef7ff;
-            background: rgba(255, 255, 255, 0.08);
+            color: #f4ede1;
+            background: rgba(255, 255, 255, 0.07);
             border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
@@ -199,20 +208,9 @@
             margin-bottom: 18px;
         }
 
-        .panel {
-            padding: 22px;
-        }
-
-        .panel h2 {
-            margin: 0 0 8px;
-            font-size: 1.35rem;
-        }
-
-        .panel p {
-            margin: 0 0 18px;
-            color: var(--muted);
-            line-height: 1.7;
-        }
+        .panel { padding: 22px; }
+        .panel h2 { margin: 0 0 8px; font-size: 1.35rem; }
+        .panel p { margin: 0 0 18px; }
 
         .input,
         .status-box,
@@ -225,7 +223,7 @@
             margin-bottom: 12px;
             padding: 14px 16px;
             border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(11, 22, 38, 0.65);
+            background: rgba(11, 11, 12, 0.72);
             color: var(--text);
             outline: none;
         }
@@ -233,16 +231,14 @@
         .status-box {
             min-height: 128px;
             padding: 16px;
-            background: rgba(7, 15, 29, 0.8);
+            background: rgba(5, 5, 6, 0.72);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            color: #d8f2ff;
+            color: #e8dece;
             white-space: pre-wrap;
             line-height: 1.65;
         }
 
-        .console {
-            padding: 24px;
-        }
+        .console { padding: 24px; }
 
         .console-header {
             display: flex;
@@ -252,30 +248,22 @@
             margin-bottom: 16px;
         }
 
-        .console-header h2 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-
-        .console-header span {
-            color: var(--muted);
-        }
+        .console-header h2 { margin: 0; font-size: 1.5rem; }
+        .console-header span { color: var(--muted); }
 
         pre {
             margin: 0;
             padding: 24px;
-            background: rgba(7, 15, 29, 0.82);
+            background: rgba(5, 5, 6, 0.75);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            color: #d5edff;
+            color: #ece2d3;
             min-height: 260px;
             overflow: auto;
         }
 
         @media (max-width: 1040px) {
             .hero,
-            .panels {
-                grid-template-columns: 1fr;
-            }
+            .panels { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 760px) {
@@ -284,14 +272,10 @@
                 padding-top: 12px;
             }
 
-            .header {
+            .header,
+            .console-header {
                 top: 10px;
                 border-radius: 28px;
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .console-header {
                 align-items: flex-start;
                 flex-direction: column;
             }
@@ -305,33 +289,37 @@
         <nav class="nav">
             <a href="/">Home</a>
             <a href="/create">Create</a>
-            <a href="/calculator">Calculator</a>
             <a href="#lookup">Search By Id</a>
             <a href="#delete">Delete</a>
+            <a href="/calculator">Calculator</a>
         </nav>
     </header>
 
+    <section class="notice" id="createdNotice" ng-class="{visible: createdMessage, success: createdMessage}">
+        {{createdMessage}}
+    </section>
+
     <section class="hero">
         <div class="hero-card">
-            <small>Control Surface</small>
-            <h1>Inspect every item or lock on to one exact id.</h1>
+            <small>PostgreSQL Console</small>
+            <h1>Inspect every item and verify new records instantly.</h1>
             <p>
-                This screen now gives you a dedicated lookup flow for your new backend endpoint,
-                while keeping refresh and delete actions nearby in the same visual system.
+                This page is now the main working screen for your data. After you create an item, you can land
+                back here automatically, see the success message, and immediately look at the exact record.
             </p>
             <div class="hero-meta">
                 <div class="chip">Live GET /api/items</div>
-                <div class="chip">Single Item Lookup</div>
-                <div class="chip">Delete By Id</div>
+                <div class="chip">Auto verify created item</div>
+                <div class="chip">Delete by id</div>
             </div>
         </div>
         <aside class="hero-side">
             <h2>Quick access</h2>
-            <p>Jump straight into the new features without scrolling the raw JSON first.</p>
+            <p>Refresh the full list, jump to the create form, or move straight to the lookup block.</p>
             <div class="quick-links">
                 <button class="primary" ng-click="fillTable()">Refresh All</button>
-                <a class="secondary" href="#lookup">Find item by id</a>
                 <a class="secondary" href="/create">Create item</a>
+                <a class="secondary" href="#lookup">Find by id</a>
             </div>
         </aside>
     </section>
@@ -339,7 +327,7 @@
     <section class="panels">
         <article class="panel" id="lookup">
             <h2>Search By Id</h2>
-            <p>Fetch one exact item using the new `GET /api/items?id=...` endpoint.</p>
+            <p>Fetch one exact item using `GET /api/items?id=...`.</p>
             <input class="input" type="number" placeholder="Enter item id" ng-model="lookupId">
             <button class="primary" ng-click="findItemById(lookupId)">Find Item</button>
             <div class="status-box">{{lookupResult}}</div>
@@ -347,14 +335,14 @@
 
         <article class="panel">
             <h2>Refresh All Items</h2>
-            <p>Load the full array at any time and inspect the current in-memory repository state.</p>
+            <p>Load the full array at any time and inspect the current PostgreSQL-backed state.</p>
             <button class="primary" ng-click="fillTable()">Refresh JSON</button>
             <div class="status-box">{{refreshStatus}}</div>
         </article>
 
         <article class="panel" id="delete">
             <h2>Delete By Id</h2>
-            <p>Remove an item and refresh the list immediately after the server confirms deletion.</p>
+            <p>Remove an item and refresh the list right after the server confirms deletion.</p>
             <input class="input" type="number" placeholder="Delete item id" ng-model="productIdToDelete">
             <button class="primary" ng-click="deleteProductById(productIdToDelete)">Delete Item</button>
             <div class="status-box">{{deleteStatus}}</div>
@@ -375,11 +363,12 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 <script>
-    angular.module('app', []).controller('indexController', function ($scope, $http) {
+    angular.module('app', []).controller('indexController', function ($scope, $http, $window) {
         $scope.itemsJson = "Loading...";
         $scope.lookupResult = "Enter an item id to see the single-item response here.";
         $scope.refreshStatus = "Ready to load all items.";
         $scope.deleteStatus = "Nothing deleted yet.";
+        $scope.createdMessage = "";
 
         $scope.fillTable = function () {
             $scope.refreshStatus = "Loading all items...";
@@ -433,7 +422,21 @@
             });
         };
 
+        function handleCreatedItem() {
+            var params = new URLSearchParams($window.location.search);
+            var createdId = params.get("createdId");
+            if (!createdId) {
+                return;
+            }
+
+            $scope.createdMessage = "Item created successfully. New item id = " + createdId + ".";
+            $scope.lookupId = Number(createdId);
+            $scope.findItemById(createdId);
+            $window.history.replaceState({}, "", "/items#lookup");
+        }
+
         $scope.fillTable();
+        handleCreatedItem();
     });
 </script>
 </body>

@@ -8,21 +8,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Dispatcher {
-    private Map<String, RequestProcessor> processors;
-    private RequestProcessor defaultNotFoundRequestProcessor;
-    private RequestProcessor methodNotAllowedRequestProcessor;
-    private ItemRepository itemRepository;
+    private final Map<String, RequestProcessor> processors;
+    private final RequestProcessor defaultNotFoundRequestProcessor;
+    private final RequestProcessor methodNotAllowedRequestProcessor;
+    private final ItemRepository itemRepository;
 
     public Dispatcher() {
         this.defaultNotFoundRequestProcessor = new DefaultNotFoundRequestProcessor();
         this.methodNotAllowedRequestProcessor = new MethodNotAllowedRequestProcessor();
-        this.itemRepository = new ItemRepository();
+        this.itemRepository = new ItemRepository(DatabaseConfig.load());
         this.processors = new HashMap<>();
         this.processors.put("GET /calculator", new CalculatorRequestProcessor());
         this.processors.put("GET /", new HelloRequestProcessor());
         this.processors.put("GET /items", new GetItemsRequestProcessor());
         this.processors.put("GET /create", new CreatePageRequestProcessor());
-        this.processors.put("POST /create/items", new CreateItemRequestProcessor());
 
         this.processors.put("GET /api/calculate", new CalculateApiRequestProcessor());
         this.processors.put("GET /api/items", new GetItemsApiRequestProcessor(itemRepository));

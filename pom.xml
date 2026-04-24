@@ -23,6 +23,13 @@
             <version>2.10.1</version>
         </dependency>
 
+        <!-- PostgreSQL JDBC -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.4</version>
+        </dependency>
+
         <!-- JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
