@@ -14,9 +14,13 @@ public class Dispatcher {
     private final ItemRepository itemRepository;
 
     public Dispatcher() {
+        this(new ItemRepository(DatabaseConfig.load()));
+    }
+
+    public Dispatcher(ItemRepository itemRepository) {
         this.defaultNotFoundRequestProcessor = new DefaultNotFoundRequestProcessor();
         this.methodNotAllowedRequestProcessor = new MethodNotAllowedRequestProcessor();
-        this.itemRepository = new ItemRepository(DatabaseConfig.load());
+        this.itemRepository = itemRepository;
         this.processors = new HashMap<>();
         this.processors.put("GET /calculator", new CalculatorRequestProcessor());
         this.processors.put("GET /", new HelloRequestProcessor());

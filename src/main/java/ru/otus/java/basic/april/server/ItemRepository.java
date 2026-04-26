@@ -10,6 +10,10 @@ import java.util.Optional;
 public class ItemRepository {
     private final DatabaseConfig databaseConfig;
 
+    protected ItemRepository() {
+        this.databaseConfig = null;
+    }
+
     public ItemRepository(DatabaseConfig databaseConfig) {
         this.databaseConfig = databaseConfig;
         initializeSchema();
