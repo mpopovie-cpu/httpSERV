@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Items</title>
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.88/build/spline-viewer.js"></script>
+    <style>
+        :root {
+            --bg: #040404;
+            --bg-soft: #0a0a0b;
+            --panel: rgba(255, 255, 255, 0.055);
+            --panel-strong: rgba(255, 255, 255, 0.08);
+            --panel-border: rgba(255, 255, 255, 0.1);
+            --text: #f6f5f2;
+            --muted: rgba(235, 233, 228, 0.68);
+            --accent: #d9d4ca;
+            --accent-soft: rgba(217, 212, 202, 0.16);
+            --shadow: 0 28px 90px rgba(0, 0, 0, 0.48);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.045), transparent 24%),
+                radial-gradient(circle at 82% 12%, rgba(255, 255, 255, 0.025), transparent 20%),
+                linear-gradient(180deg, #020202 0%, #050505 45%, #090909 100%);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.34;
+            background-image:
+                radial-gradient(circle at 18% 32%, rgba(255, 255, 255, 0.08) 0 1px, transparent 2px),
+                radial-gradient(circle at 67% 24%, rgba(255, 255, 255, 0.05) 0 1px, transparent 2px),
+                radial-gradient(circle at 74% 78%, rgba(255, 255, 255, 0.06) 0 1px, transparent 2px),
+                radial-gradient(circle at 35% 70%, rgba(255, 255, 255, 0.04) 0 1px, transparent 2px);
+            background-size: 180px 180px, 220px 220px, 260px 260px, 300px 300px;
+            mix-blend-mode: screen;
+        }
+
+        a { text-decoration: none; }
+
+        .shell {
+            width: min(1240px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 30;
+            padding-top: 18px;
+        }
+
+        .topbar-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 16px 20px;
+            border: 1px solid var(--panel-border);
+            border-radius: 999px;
+            background: rgba(7, 7, 8, 0.72);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .brand {
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #f8f3eb;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav a {
+            color: #dad3c8;
+            padding: 11px 16px;
+            border-radius: 999px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .nav a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff8ef;
+        }
+
+        .cta-link {
+            color: #090909;
+            background: linear-gradient(135deg, #f7f3ea, #d6cec0);
+            padding: 12px 22px;
+            border-radius: 999px;
+            font-weight: 800;
+            box-shadow: 0 12px 30px rgba(255, 245, 226, 0.12);
+        }
+
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 0;
+            height: 40vh;
+            background: linear-gradient(180deg, transparent 0%, rgba(3, 3, 3, 0.16) 35%, rgba(3, 3, 3, 0.95) 100%);
+            pointer-events: none;
+        }
+
+        spline-viewer {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            filter: saturate(0.8) brightness(0.92);
+        }
+
+        .content {
+            position: relative;
+            padding: 88px 0 92px;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.035), transparent 24%),
+                linear-gradient(180deg, #050505 0%, #080808 40%, #0b0b0c 100%);
+        }
+
+        .content::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.25;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+            background-size: 84px 84px;
+            mask-image: linear-gradient(180deg, transparent 0%, black 12%, black 88%, transparent 100%);
+        }
+
+        .section-head {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin-bottom: 30px;
+        }
+
+        .section-head h2 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            line-height: 1;
+            letter-spacing: -0.04em;
+        }
+
+        .section-head p {
+            margin-top: 16px;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .feature-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .feature-card {
+            padding: 24px;
+            border-radius: 28px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.035));
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            box-shadow: var(--shadow);
+        }
+
+        .feature-card small {
+            display: block;
+            margin-bottom: 18px;
+            color: #dfd6c8;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 12px;
+            font-size: 1.45rem;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            line-height: 1.75;
+            margin-bottom: 18px;
+        }
+
+        .feature-link {
+            display: inline-flex;
+            align-items: center;
+            color: #f0e6d7;
+            font-weight: 800;
+        }
+
+        @media (max-width: 1080px) {
+            .feature-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 760px) {
+            .shell { width: min(100% - 20px, 1240px); }
+
+            .topbar-inner {
+                padding: 14px;
+                align-items: flex-start;
+                flex-direction: column;
+                border-radius: 30px;
+            }
+
+            .nav { justify-content: flex-start; }
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<header class="topbar">
+    <div class="shell">
+        <div class="topbar-inner">
+            <div class="brand">Nova Items</div>
+            <nav class="nav">
+                <a href="#overview">Home</a>
+                <a href="#control">Control</a>
+                <a href="/items">Items</a>
+                <a href="/create">Create</a>
+                <a href="/calculator">Calculator</a>
+            </nav>
+            <a class="cta-link" href="/items">Open Console</a>
+        </div>
+    </div>
+</header>
+
+<section class="hero" id="overview">
+    <spline-viewer url="https://prod.spline.design/0Nikj8mSki4vxQmB/scene.splinecode"></spline-viewer>
+</section>
+
+<section class="content" id="control">
+    <div class="shell">
+        <div class="section-head">
+            <h2>Everything now points to the real item flow.</h2>
+            <p>
+                Browse the full PostgreSQL-backed list, create new items, search by id, and delete records
+                without the old extra success screen getting in the way.
+            </p>
+        </div>
+        <div class="feature-grid">
+            <article class="feature-card">
+                <small>.01</small>
+                <h3>Items Console</h3>
+                <p>Open the dashboard to refresh the full list and inspect the live JSON coming from PostgreSQL.</p>
+                <a class="feature-link" href="/items">Open items page -></a>
+            </article>
+            <article class="feature-card">
+                <small>.02</small>
+                <h3>Create Flow</h3>
+                <p>Create an item through the real API and jump straight back into the console with the new id.</p>
+                <a class="feature-link" href="/create">Create an item -></a>
+            </article>
+            <article class="feature-card">
+                <small>.03</small>
+                <h3>Find By Id</h3>
+                <p>Use the item console to pull one exact item when you want to verify a new record quickly.</p>
+                <a class="feature-link" href="/items#lookup">Search by id -></a>
+            </article>
+            <article class="feature-card">
+                <small>.04</small>
+                <h3>Calculator</h3>
+                <p>The calculator stays available as a separate tool without interrupting the item workflow.</p>
+                <a class="feature-link" href="/calculator">Open calculator -></a>
+            </article>
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -7,9 +7,9 @@ import ru.otus.java.basic.april.server.TemplateLoader;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class CalculatorRequestProcessor implements RequestProcessor {
+public class CreatePageRequestProcessor implements RequestProcessor {
     @Override
     public void execute(HttpRequest request, OutputStream output) throws IOException {
-        HttpResponse.ok(TemplateLoader.load("templates/calculator.html")).send(output);
+        HttpResponse.ok(TemplateLoader.load("templates/create.html")).send(output);
     }
 }
