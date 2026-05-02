@@ -1,5 +1,5 @@
 package ru.otus.java.basic.april.server;
-
+//
 public class Application {
     // Темы для консультации:
     // Граница между приложение и сервером = Java EE + TomCat
